@@ -39,8 +39,8 @@ class Producer:
         #
         self.broker_properties = {
             # NB | TODO: how to reference the project README ?
-            {"schema.registry.url": "http://localhost:8081"},
-            {"bootstrap.servers": "PLAINTEXT://146.59.227.198:9092"}
+            "schema.registry.url": "http://localhost:8081",
+            "bootstrap.servers": "PLAINTEXT://146.59.227.198:9092",
         }
 
         # If the topic does not already exist, try to create it
@@ -57,10 +57,14 @@ class Producer:
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
+        client = AdminClient(
+            {"bootstrap.servers": self.broker_properties["bootstrap.servers"]}
+        )
+
         futures = client.create_topics(
             [
                 NewTopic(
-                    topic=topic_name,
+                    topic=self.topic_name,
                     num_partitions=self.num_partitions,
                     replication_factor=self.num_replicas,
                     config={
@@ -78,7 +82,7 @@ class Producer:
                 future.result()
                 print(f"topic {self.topic_name} created")
             except Exception as e:
-                print(f"failed to create topic {topic_name}: {e}")
+                print(f"failed to create topic {self.topic_name}: {e}")
                 raise
 
     def time_millis(self):

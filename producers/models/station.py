@@ -33,13 +33,13 @@ class Station(Producer):
 
         # TODO: Complete the below by deciding on a topic name, number of partitions, and number of
         # replicas
-        topic_name = f"{'com.udacity.stations.' + station_name}"
+        topic_name = f"{'org.cta.arrivals.' + station_name}"
         super().__init__(
             topic_name,
             key_schema=Station.key_schema,
             value_schema=Station.value_schema,
             num_partitions=2,
-            num_replicas=2,
+            num_replicas=1,
         )
 
         self.station_id = int(station_id)
@@ -62,7 +62,7 @@ class Station(Producer):
                "train_id":          train.train_id,
                "direction":         direction,
                "line":              self.color.name,
-               "train_status":      train.satus.name,
+               "train_status":      train.status.name,
                "prev_station_id":   prev_station_id,
                "prev_direction":    prev_direction
            },
